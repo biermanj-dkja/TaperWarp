@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "taperwarp"
+# Must match the canonical version declared in README.md.
+version = "0.1.0"
+description = "Mathematically correct artwork warping for tapered cylindrical vessels (right circular frustums)."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+keywords = ["laser", "engraving", "tumbler", "frustum", "cone", "warp", "cricut", "lightburn"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Manufacturing",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+]
+dependencies = [
+    # Pillow: raster decode/encode (PNG/JPEG) and image container. Approved core dep.
+    "Pillow>=10.0,<13",
+    # NumPy: vectorized inverse mapping and resampling. Approved core dep.
+    "numpy>=1.26,<3",
+]
+
+[project.optional-dependencies]
+gui = [
+    # PySide6: Version 1 GUI toolkit (cross-platform, LGPL). GUI-only extra.
+    "PySide6>=6.6,<7",
+]
+dev = [
+    "pytest>=8.0,<9",
+    "hypothesis>=6.90,<7",
+    "ruff>=0.4,<1",
+    "black>=24.0,<26",
+    "mypy>=1.8,<2",
+]
+
+[project.scripts]
+taperwarp = "taperwarp.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src/taperwarp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
