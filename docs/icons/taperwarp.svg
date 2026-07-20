@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- TaperWarp placeholder icon: a tapered vessel (frustum) with a warped band. Original artwork, MIT licensed with the project. -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a90d9"/>
+      <stop offset="1" stop-color="#2c5f94"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="#f4f1ea"/>
+  <!-- frustum body: wider at top (rim) than base -->
+  <path d="M 34 26 L 94 26 L 86 104 L 42 104 Z" fill="url(#g)" stroke="#1f4468" stroke-width="3" stroke-linejoin="round"/>
+  <!-- rim ellipse -->
+  <ellipse cx="64" cy="26" rx="30" ry="7" fill="#6fb0e8" stroke="#1f4468" stroke-width="3"/>
+  <!-- warped artwork band: arcs bowing as on a developed wrap -->
+  <path d="M 38.5 52 Q 64 44 89.5 52" fill="none" stroke="#f4f1ea" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 40.5 68 Q 64 60 87.5 68" fill="none" stroke="#f4f1ea" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 42.5 84 Q 64 76 85.5 84" fill="none" stroke="#f4f1ea" stroke-width="4" stroke-linecap="round"/>
+</svg>

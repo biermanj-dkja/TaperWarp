@@ -27,10 +27,9 @@ ABS_TOL_MM = 1e-3
 
 
 def approx_geometry(actual: float, expected: float) -> bool:
-    """Accuracy criterion from docs/math.md §8."""
-    return abs(actual - expected) <= max(REL_TOL * abs(expected), ABS_TOL_MM * 0, REL_TOL) or abs(
-        actual - expected
-    ) <= ABS_TOL_MM
+    """Accuracy criterion from docs/math.md §8: agreement within relative
+    error 1e-9 or absolute error 0.001 mm, whichever is larger."""
+    return abs(actual - expected) <= max(REL_TOL * abs(expected), ABS_TOL_MM)
 
 
 # ---------------------------------------------------------------------------

@@ -12,8 +12,9 @@ these entry points):
 from .geometry import ArtworkRegion, Frustum, FrustumWarp, GeometryError
 from .imagewarp import WarpResult, warp_image
 
-# Must match the version declared in README.md and pyproject.toml.
-__version__ = "0.1.0"
+# Canonical version (PEP 440). Must match README.md and pyproject.toml —
+# the release checklist (PROJECT_GUIDELINES.md §26.4) moves all three together.
+__version__ = "0.1.1a1"
 
 __all__ = [
     "ArtworkRegion",

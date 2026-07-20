@@ -14,7 +14,10 @@ pre-commit install   # optional but recommended
    truth; change the derivation there first, then the code.
 2. Write or extend tests alongside every change. Geometry changes need
    analytic checks (1e-9 relative / 0.001 mm absolute tolerance),
-   property-based coverage, and edge cases.
+   property-based coverage, and edge cases. Raster changes must keep the
+   golden-image fixtures in `tests/fixtures/` passing — or regenerate them
+   deliberately with `python tests/generate_fixtures.py` and explain the
+   visual change in the PR.
 3. Run locally before pushing:
 
    ```bash
@@ -30,7 +33,9 @@ pre-commit install   # optional but recommended
 ## Ground rules (short form)
 
 - Math before features; never heuristic warping.
-- Strict layering: GUI → app logic → geometry → image processing → I/O.
+- Dependency direction: frontends → (I/O, renderers) → geometry. The
+  geometry engine and renderers contain zero GUI imports; the geometry
+  engine imports nothing from any other project module.
 - Millimeters internally; inches only at I/O boundaries.
 - Offline only: no network, telemetry, or credentials, ever.
 - Dependencies: Pillow/NumPy core; svgwrite/svgpathtools/SciPy only with

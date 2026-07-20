@@ -141,22 +141,28 @@ Keep the mathematical specification independent from the implementation — it s
 
 ## 7. Architecture
 
-Use a layered architecture:
+Use a strict dependency tree (amended in v0.1.1a1 — the original linear
+stack showed geometry *above* image processing, which was backwards in
+dependency terms; the renderers consume the geometry engine, and I/O is a
+sibling called directly by frontends):
 
 ```
-GUI
-↓
-Application Logic
-↓
-Geometry Engine
-↓
-Image Processing
-↓
-File I/O
+        GUI / CLI / Plugins   (frontends — orchestrate)
+           /      |      \
+          /       |       \
+    File I/O   Raster    Vector renderer (planned)
+              renderer        |
+                  \           /
+                   \         /
+                 Geometry Engine
 ```
 
-- The geometry engine has no GUI dependencies.
-- The image processing layer knows nothing about GUI implementation.
+- The geometry engine imports nothing from any other project module and has
+  no GUI dependencies.
+- The image processing (renderer) layer consumes only the geometry engine's
+  public API and knows nothing about GUI implementation or file I/O.
+- Frontends orchestrate: load via I/O, transform via the renderers, save
+  via I/O.
 
 ### Public API
 

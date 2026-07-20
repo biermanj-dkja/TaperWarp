@@ -4,8 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "taperwarp"
-# Must match the canonical version declared in README.md.
-version = "0.1.0"
+# Canonical version (PEP 440 pre-release). Must match README.md and
+# taperwarp.__version__ — never let them drift (PROJECT_GUIDELINES.md §26).
+version = "0.1.1a1"
 description = "Mathematically correct artwork warping for tapered cylindrical vessels (right circular frustums)."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -63,4 +64,4 @@ files = ["src/taperwarp"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "tests"]

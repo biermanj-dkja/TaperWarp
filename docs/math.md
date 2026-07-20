@@ -260,9 +260,18 @@ The developed output raster is produced by **inverse mapping**: for every
 output pixel center, compute `(u, v)` via §3.5, then sample the source image
 bilinearly. Pixels mapping outside `[0, W] × [0, h]` are fully transparent.
 
+**Edge policy (Version 1).** Source samples that fall outside the source
+raster are treated as fully transparent. Opaque artwork touching the source
+edge therefore antialiases against transparency: a soft, partially
+transparent fringe up to one output pixel wide can appear at the artwork
+boundary. This is the intended behavior for floating logos/decals and is
+covered by tests; a clamp-to-edge mode for full-bleed artwork is on the
+roadmap.
+
 To avoid dark fringes at transparent edges, sampling is performed on
 **alpha-premultiplied** RGBA values and un-premultiplied afterward. Bilinear
-interpolation on a fixed pixel grid with float64 arithmetic is deterministic.
+interpolation on a fixed pixel grid — float64 geometry coordinates, float32
+pixel accumulation — is deterministic.
 
 The output bounding box is computed **exactly** from the geometry: the
 extrema of `x` and `y` over the region boundary occur only at the four
@@ -274,8 +283,9 @@ candidate set gives the exact bounds.
 
 ## 6. Units, DPI
 
-Internal computation: millimeters and radians, float64. DPI (`p` pixels per
-inch) converts to pixel pitch `25.4 / p` mm at the raster boundary only.
+Internal computation: millimeters and radians; geometry in float64. DPI
+(`p` pixels per inch) converts to pixel pitch `25.4 / p` mm at the raster
+boundary only.
 
 ---
 

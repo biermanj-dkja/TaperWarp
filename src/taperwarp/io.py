@@ -13,7 +13,15 @@ from pathlib import Path
 
 from PIL import Image
 
-__all__ = ["MM_PER_INCH", "inches_to_mm", "load_raster", "mm_to_inches", "save_png"]
+__all__ = [
+    "MM_PER_INCH",
+    "FileFormatError",
+    "OutputError",
+    "inches_to_mm",
+    "load_raster",
+    "mm_to_inches",
+    "save_png",
+]
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +32,11 @@ _SUPPORTED_RASTER_SUFFIXES = {".png", ".jpg", ".jpeg"}
 
 class FileFormatError(ValueError):
     """Raised for unsupported or unreadable input files."""
+
+
+class OutputError(ValueError):
+    """Raised when an output file cannot be written (permissions, missing
+    directory, disk full, path is a directory, …), with a clean message."""
 
 
 def inches_to_mm(value_in: float) -> float:
@@ -65,11 +78,22 @@ def save_png(image: Image.Image, path: str | Path, dpi: float) -> None:
     """Save an RGBA image as PNG with embedded DPI metadata.
 
     Only writes to the exact path the caller (i.e., the user) selected.
+
+    Raises
+    ------
+    FileFormatError
+        If the output path does not end in ``.png``.
+    OutputError
+        If the file cannot be written (permission denied, missing parent
+        directory, disk full, path is a directory, …).
     """
     p = Path(path)
     if p.suffix.lower() != ".png":
         raise FileFormatError(
             f"Output path must end in .png, got {p.suffix!r}."
         )
-    image.save(p, format="PNG", dpi=(dpi, dpi))
+    try:
+        image.save(p, format="PNG", dpi=(dpi, dpi))
+    except OSError as exc:
+        raise OutputError(f"Could not save {p}: {exc}") from exc
     logger.info("Wrote %s (%dx%d px, %.0f DPI)", p, image.width, image.height, dpi)

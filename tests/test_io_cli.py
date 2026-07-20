@@ -108,3 +108,44 @@ class TestCLI:
             ]
         )
         assert code == 2
+
+
+class TestOutputErrors:
+    def _write_src(self, tmp_path: Path) -> Path:
+        p = tmp_path / "src.png"
+        Image.new("RGBA", (32, 32), (255, 0, 0, 255)).save(p)
+        return p
+
+    def _warp_args(self, src: Path, out: Path) -> list[str]:
+        return [
+            "warp", str(src), str(out),
+            "--top-diameter", "70", "--bottom-diameter", "90",
+            "--height", "150", "--offset", "10",
+            "--art-width", "120", "--art-height", "60", "--dpi", "96",
+        ]
+
+    def test_missing_output_directory_exit_code(self, tmp_path: Path) -> None:
+        src = self._write_src(tmp_path)
+        out = tmp_path / "no" / "such" / "dir" / "out.png"
+        assert main(self._warp_args(src, out)) == 2
+
+    def test_output_path_is_directory_exit_code(self, tmp_path: Path) -> None:
+        src = self._write_src(tmp_path)
+        out = tmp_path / "adir.png"
+        out.mkdir()
+        assert main(self._warp_args(src, out)) == 2
+
+    def test_save_png_wraps_oserror(self, tmp_path: Path) -> None:
+        from taperwarp.io import OutputError
+
+        img = Image.new("RGBA", (4, 4))
+        with pytest.raises(OutputError, match="Could not save"):
+            save_png(img, tmp_path / "missing" / "out.png", dpi=300.0)
+
+    def test_overwrite_is_silent_and_documented(self, tmp_path: Path) -> None:
+        """CLI silently overwrites an existing output (documented behavior)."""
+        src = self._write_src(tmp_path)
+        out = tmp_path / "out.png"
+        out.write_bytes(b"old contents")
+        assert main(self._warp_args(src, out)) == 0
+        assert Image.open(out).mode == "RGBA"
